@@ -5,25 +5,42 @@ import com.unitbv.licenta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    User userLogged;
     @GetMapping("getUsers")
     public List<User> getUsers(){
         return userRepository.findAll();
     }
+
+    @CrossOrigin
     @PostMapping("postUsers")
-    public ResponseEntity<HttpStatus> postUsers(){
-        User user = new User(1,"Kshirsagar","Jay", "1234","ADMIN","jay.kshirsagar@student.unitbv.ro");
-        this.userRepository.save(user);
-        return new ResponseEntity(HttpStatus.ACCEPTED);
+    public User postUsers(@RequestBody User user){
+        return this.userRepository.save(user);
+    }
+
+    @CrossOrigin
+    @PostMapping("userLogged")
+    public void setUserLogged(@RequestBody User user){
+        userLogged = user;
+    }
+    @CrossOrigin
+    @GetMapping("getUserLogged")
+    public User getUserLogged()
+    {
+        return userLogged;
+    }
+    @CrossOrigin
+    @GetMapping("setUserLogout")
+    public void setUserLogout(){
+        userLogged = null;
     }
 }
